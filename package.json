@@ -1,0 +1,57 @@
+{
+  "name": "school-wallet-app",
+  "version": "1.0.0",
+  "description": "Приложение школы Node.js «Кошелёк»",
+  "author": "",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/AndreyAndreevich/yandex-school-project.git"
+  },
+  "license": "ISC",
+  "engines": {
+    "node": "^8.2"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "express": "^4.15.4",
+    "i": "^0.3.5",
+    "koa": "^2.3.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-router": "^7.2.1",
+    "koa-static": "^4.0.1",
+    "lodash": "^4.17.4"
+  },
+  "bugs": {
+    "url": "https://github.com/AndreyAndreevich/yandex-school-project/issues"
+  },
+  "homepage": "https://github.com/AndreyAndreevich/yandex-school-project#readme",
+  "main": "index.js",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "css-loader": "^0.28.7",
+    "eslint": "^4.8.0",
+    "eslint-config-airbnb": "^15.1.0",
+    "eslint-config-airbnb-base": "^12.0.1",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-flowtype": "^2.37.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx": "0.0.2",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-node": "^5.2.0",
+    "eslint-plugin-react": "^7.4.0",
+    "html-webpack-plugin": "^2.30.1",
+    "node": "^8.3.0",
+    "postcss-loader": "^2.0.6",
+    "style-loader": "^0.19.0",
+    "webpack": "^3.6.0"
+  },
+  "keywords": []
+}
