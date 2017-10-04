@@ -20,7 +20,7 @@ class fileModel extends Model{
 			let data = await readFileAsync(this._dataSourceFile);
 			this._dataSource = JSON.parse(data);
 		} catch (err) {
-			return ApplicationError(('Err load file : ' + err), 400);
+			throw ApplicationError(('Err loadFile : ' + err), 400);
 		}
 	}
 
@@ -30,8 +30,12 @@ class fileModel extends Model{
 	}
 
 	async _saveUpdates () {
-		let redactData = (JSON.stringify(this._dataSource, null, 4));
-		return await writeFileAsync(this._dataSourceFile, redactData);
+		try {
+			let redactData = (JSON.stringify(this._dataSource, null, 4));
+			return await writeFileAsync(this._dataSourceFile, redactData);
+		} catch (err) {
+			throw ApplicationError(('Err _saveUpdates : ' + err), 400);
+		}
 	}
 }
 

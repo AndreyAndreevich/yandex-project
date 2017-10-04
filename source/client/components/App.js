@@ -115,13 +115,15 @@ class App extends Component {
 	}
 
 	onUpdate(transactions) {
+		let cardHistory = this.state.cardHistory;
+		let cardsList = this.state.cardsList;
+		let activeCardIndex = this.state.activeCardIndex;
 		for (let i = 0; i < transactions.length; i++) {
 			let transaction = transactions[i];
-			transaction.card = this.state.cardsList[this.state.activeCardIndex];
-			this.state.cardHistory.push(transaction);
+			transaction.card = cardsList[activeCardIndex];
+			cardHistory.push(transaction);
 		}
-		let activeCardIndex = this.state.activeCardIndex;
-		this.setState({activeCardIndex});
+		this.setState({cardHistory});
 	}
 	//console.log(this.state.activeCardIndex);
 

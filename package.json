@@ -5,7 +5,7 @@
   "author": "",
   "scripts": {
     "start": "node ./source/app.js",
-    "test": "jest ",
+    "test": "jest",
     "server": "nodemon  ./source/app.js",
     "build": "./node_modules/.bin/webpack",
     "precommit": "eslint ./source/app.js"
@@ -18,6 +18,9 @@
       "./test/"
     ]
   },
+  "jest" : {
+	"collectCoverage": true
+  },
   "license": "ISC",
   "engines": {
     "node": "^8.2"
@@ -29,24 +32,24 @@
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.1",
     "lodash": "^4.17.4",
-    "log4js": "^2.3.4"
+    "log4js": "^2.3.7"
   },
   "main": "index.js",
   "devDependencies": {
-    "antd": "^2.13.4",
+    "antd": "^2.13.6",
     "axios": "^0.16.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-emotion": "^7.3.2",
-    "babel-plugin-import": "^1.6.0",
+    "babel-plugin-import": "^1.6.2",
     "babel-preset-env": "^1.6.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "card-info": "git+https://github.com/iniel/card-info.git",
     "css-loader": "^0.28.7",
     "emotion": "^7.3.2",
-    "eslint": "^4.8.0",
-    "eslint-config-airbnb": "^16.0.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
@@ -57,7 +60,7 @@
     "isomorphic-style-loader": "^4.0.0",
     "jest": "^21.2.1",
     "jquery": "^3.2.1",
-    "moment": "^2.18.1",
+    "moment": "^2.19.1",
     "node": "^8.3.0",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
@@ -67,7 +70,7 @@
     "sinon": "^4.0.1",
     "style-loader": "^0.19.0",
     "url-loader": "^0.6.2",
-    "webpack": "^3.6.0"
+    "webpack": "^3.7.1"
   },
   "keywords": []
 }
