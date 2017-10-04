@@ -1,56 +1,73 @@
 {
-  "name": "school-wallet-app",
+  "name": "yandex-project",
   "version": "1.0.0",
   "description": "Приложение школы Node.js «Кошелёк»",
   "author": "",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./source/app.js",
+    "test": "jest ",
+    "server": "nodemon  ./source/app.js",
+    "build": "./node_modules/.bin/webpack",
+    "precommit": "eslint ./source/app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/AndreyAndreevich/yandex-school-project.git"
+  "nodemonConfig": {
+    "ignore": [
+      "./source/data/",
+      "./source/client/components/",
+      "./logs/",
+      "./test/"
+    ]
   },
   "license": "ISC",
   "engines": {
     "node": "^8.2"
   },
   "dependencies": {
-    "body-parser": "^1.18.1",
-    "express": "^4.15.4",
-    "i": "^0.3.5",
+    "emotion-server": "^7.3.2",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.2.1",
     "koa-static": "^4.0.1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "log4js": "^2.3.4"
   },
-  "bugs": {
-    "url": "https://github.com/AndreyAndreevich/yandex-school-project/issues"
-  },
-  "homepage": "https://github.com/AndreyAndreevich/yandex-school-project#readme",
   "main": "index.js",
   "devDependencies": {
-    "babel": "^6.23.0",
+    "antd": "^2.13.4",
+    "axios": "^0.16.2",
     "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.1",
     "babel-loader": "^7.1.2",
+    "babel-plugin-emotion": "^7.3.2",
+    "babel-plugin-import": "^1.6.0",
     "babel-preset-env": "^1.6.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "card-info": "git+https://github.com/iniel/card-info.git",
     "css-loader": "^0.28.7",
+    "emotion": "^7.3.2",
     "eslint": "^4.8.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-config-airbnb-base": "^12.0.1",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-flowtype": "^2.37.0",
+    "eslint-config-airbnb": "^16.0.0",
     "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-jsx": "0.0.2",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-node": "^5.2.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "html-webpack-plugin": "^2.30.1",
+    "expect": "^21.2.1",
+    "extract-text-webpack-plugin": "^3.0.1",
+    "file-loader": "^1.1.5",
+    "husky": "^0.14.3",
+    "ignore-loader": "^0.1.2",
+    "isomorphic-style-loader": "^4.0.0",
+    "jest": "^21.2.1",
+    "jquery": "^3.2.1",
+    "moment": "^2.18.1",
     "node": "^8.3.0",
-    "postcss-loader": "^2.0.6",
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-emotion": "^7.3.2",
+    "serialize-javascript": "^1.4.0",
+    "sinon": "^4.0.1",
     "style-loader": "^0.19.0",
+    "url-loader": "^0.6.2",
     "webpack": "^3.6.0"
   },
   "keywords": []
