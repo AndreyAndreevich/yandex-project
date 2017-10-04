@@ -130,7 +130,7 @@ class PrepaidContract extends Component {
 		}
 		axios({
 			method: 'post',
-			url: `/cards/${this.props.activeCard.id}/topup`,
+			url: `/cards/${this.props.activeCard.id}/transfer`,
 			data: {
 				type: "card2Card",
 				data: this.props.inactiveCardsList[this.state.activeCardIndex].id,
