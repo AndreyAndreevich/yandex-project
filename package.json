@@ -18,8 +18,8 @@
       "./test/"
     ]
   },
-  "jest" : {
-	"collectCoverage": true
+  "jest": {
+    "collectCoverage": true
   },
   "license": "ISC",
   "engines": {
