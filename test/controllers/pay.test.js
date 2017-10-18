@@ -3,34 +3,39 @@
 const jest = require('jest');
 const sinon = require('sinon');
 const supertest = require('supertest');
-const app = require('../../../source/app.js');
+const app = require('../../source/app.js');
+const moment = require('moment');
 
-const CardsModel = require('../../../source/models/cards/cards');
-const TransactionsModel = require('../../../source/models/transactions/transactions');
-const Error = require('../../../source/controllers/error');
+const CardsModel = require('../../source/models/cards/cards');
+const TransactionsModel = require('../../source/models/transactions/transactions');
+const Error = require('../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////
 
-jest.mock('../../../source/controllers/error');
+jest.mock('../../source/controllers/error');
 
 const sandbox = sinon.sandbox.create();
 
 
 const DATA = {
-	"id": 0,
-	"cardId": 3,
-	"type": "card2Card",
-	"data": "4701270410000005",
-	"time": "2017-10-16T10:52:33+03:00",
-	"sum": 16
+	"type": "paymentMobile",
+	"data": "89119348960",
+	"sum": 20
 };
 const TRYDATA = {
-	"id": 4,
-	"cardId": 3,
-	"type": "card2Card",
-	"data": "4701270410000005",
-	"time": "2017-10-16T10:52:33+03:00",
-	"sum": "16"
+	'card': {
+		"id": 2,
+		"cardNumber": "4093560410000024",
+		"balance": 7414
+	},
+	'transaction': 	{
+		"id": 4,
+		"cardId": 2,
+		"type": "paymentMobile",
+		"data": "89119348960",
+		"time": "2017-10-16T10:52:02+03:00",
+		"sum": 20
+	},
 };
 const CARDS = [
 	{
@@ -76,6 +81,10 @@ const TRANSACTIONS = [
 	}
 ];
 
+sandbox.stub(moment.prototype, 'format').callsFake(function format(string) {
+	return  '2017-10-16T10:52:02+03:00';
+});
+
 
 sandbox.stub(TransactionsModel.prototype, 'loadFile').callsFake(function loadFile() {
 	this._dataSource = TRANSACTIONS;
@@ -94,6 +103,13 @@ sandbox.stub(TransactionsModel.prototype, '_saveUpdates').onFirstCall().callsFak
 });
 
 
+sandbox.stub(CardsModel.prototype, '_saveUpdates').onFirstCall().callsFake(function _saveUpdates() {
+	return 'OK';
+}).onSecondCall().callsFake(function _saveUpdates() {
+	throw 'test error';
+});
+
+
 Error.mockImplementation((err) => {
 	return err;
 });
@@ -103,69 +119,77 @@ const server = app.listen();
 
 ////////////////////////////////////////////////////////////////
 
-test('Test get transaction controller', async () => {
+test('Test pay', async () => {
 	const response = await supertest(server)
-		.get('/cards/1/transactions');
-	expect(response.statusCode).toBe(200);
-	expect(response.body).toEqual([{
-		"id": 1,
-		"cardId": 1,
-		"type": "card2Card",
-		"data": "4093560410000024",
-		"time": "2017-10-16T10:52:02+03:00",
-		"sum": "1"
-	}]);
-});
-
-
-test('Test get transaction controller (error id)', async () => {
-	const response = await supertest(server)
-		.get('/cards/ee/transactions');
-	expect(response.statusCode).toBe(400);
-	expect(response.text).toBe('400 Bad request');
-});
-
-//////////////////////////////////////////////////////////////////
-
-test('Test create transaction controller', async () => {
-	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/cards/2/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
-	expect(response.statusCode).toBe(200);
+	expect(response.statusCode).toBe(201);
+	expect(response.body).toEqual(TRYDATA);
 });
 
 
-test('Test create transaction controller (error id)', async () => {
+test('Test pay (error id)', async () => {
 	const response = await supertest(server)
-		.post('/cards/4/transactions')
+		.post('/cards/4/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
-	expect(response.text).toBe('400 Bad request');
+	expect(response.text).toEqual('400 Bad request');
 });
 
 
-test('Test create transaction controller (error created)', async () => {
+test('Test pay (error data)', async () => {
 	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/cards/2/pay')
 		.set('Accept', 'application/json')
-		.send(DATA);
+		.send({
+		"type": "paymentMobile",
+		"data": '89119348960'
+	});
 	expect(response.statusCode).toBe(400);
-	expect(response.text).toBe('400 Bad request');
+	expect(response.text).toEqual('400 Bad request');
 });
 
 
-test('Test create transaction controller (error id)', async () => {
-	DATA.type = "error";
+test('Test pay (error sum)', async () => {
 	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/cards/2/pay')
+		.set('Accept', 'application/json')
+		.send({
+			"type": "paymentMobile",
+			"data": '89119348960',
+			'sum': '10as',
+		});
+	expect(response.statusCode).toBe(400);
+	expect(response.text).toEqual('400 Bad request');
+});
+
+
+test('Test pay (error balance)', async () => {
+	const response = await supertest(server)
+		.post('/cards/2/pay')
+		.set('Accept', 'application/json')
+		.send({
+			"type": "paymentMobile",
+			"data": '89119348960',
+			'sum': 7500,
+		});
+	expect(response.statusCode).toBe(400);
+	expect(response.text).toEqual('400 Bad request');
+});
+
+
+test('Test pay (error created)', async () => {
+	const response = await supertest(server)
+		.post('/cards/3/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
-	expect(response.text).toBe('400 Bad request');
+	expect(response.text).toEqual('400 Bad request');
 });
 
 /////////////////////////////////////////////////////////////////
 
 server.close();
+

@@ -8,12 +8,15 @@ const moment = require('moment');
 
 module.exports = async(ctx) => {
 	try {
-		const sum = ctx.request.body.sum;
+		const sum = Number(ctx.request.body.sum);
+		const type = ctx.request.body.type;
+		const data = ctx.request.body.data;
 		const cardId = Number(ctx.params['id']);
 		logger.log('info',`Запрос на оплату по карте ${cardId}`);
+		if (!sum | !type | !data | !cardId) throw ('Данные не заполнены');
 		if (sum <= 0) throw ('Сумма оплаты долна быть положительной');
-		const cardsModel = await new CardsModel();
 		let flag = true;
+		const cardsModel =  new CardsModel();
 		let cards = await cardsModel.getAll();
 		let card;
 		for (let i = 0; i < cards.length; i++) {
@@ -28,13 +31,13 @@ module.exports = async(ctx) => {
 		let transaction = {
 			id: 0,
 			cardId: cardId,
-			type: ctx.request.body.type,
-			data: ctx.request.body.data,
+			type: type,
+			data: data,
 			time: moment().format('YYYY-MM-DTHH:mm:ssZ'),
 			sum: sum
 		};
-		const transactionsModel = await new TransactionsModel();
 		const newCard = await cardsModel.create(card);
+		const transactionsModel = new TransactionsModel();
 		await transactionsModel.create(transaction);
 		const req = {
 			card: newCard,
