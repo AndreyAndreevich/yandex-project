@@ -21,7 +21,7 @@ module.exports = async(ctx) => {
 		for (let i = 0; i < cards.length; i++) {
 			if (cards[i].id === cardId2) {
 				card2 = cards[i];
-				if (card2.sum > card2.balance) throw (`Недостаточно средств на карте ${cardId2}`)
+				if (data.sum > card2.balance) throw (`Недостаточно средств на карте ${cardId2}`)
 				flag = false;
 			}
 		}
