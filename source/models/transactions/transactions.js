@@ -22,7 +22,7 @@ class Transactions extends FileModel{
 			await this._saveUpdates();
 		}
 		catch (err) {
-			return ApplicationError(('Err created transaction: ' + err), 400);
+			throw ApplicationError(('Err created transaction: ' + err), 400);
 		}
 	}
 }

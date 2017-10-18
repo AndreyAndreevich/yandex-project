@@ -37,12 +37,18 @@ class Cards extends FileModel{
 	async remove (id) {
 		try {
 			await this.loadFile();
-			if ((id > this._dataSource.length) | (id <= 0)) throw(`Не существует карты с id ${id}`);
-			this._dataSource.splice(id - 1, 1);
+			let flag = false;
+			for (let i in this._dataSource)
+				if (this._dataSource[i].id === id) {
+					this._dataSource.splice(i, 1);
+					flag = true;
+					break;
+				}
+			if (!flag) throw(`Не существует карты с id ${id}`);
 			await this._saveUpdates();
 			return true;
 		} catch (err) {
-			return ApplicationError(('Err deleted : ' + err), 400);
+			throw ApplicationError(('Err deleted : ' + err), 400);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-import * as jest from "jest";
+const jest = require('jest');
 
 const path =require('path');
 const fs = require('fs');

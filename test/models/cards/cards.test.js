@@ -1,7 +1,7 @@
-import * as jest from "jest";
+const jest = require('jest');
+const sinon = require('sinon');
 
-const path =require('path');
-const fs = require('fs');
+const path = require('path');
 
 const CardsModel = require('../../../source/models/cards/cards');
 const Error = require('../../../source/controllers/error');
@@ -9,13 +9,11 @@ const Error = require('../../../source/controllers/error');
 /////////////////////////////////////////////////////////////////////////////////////
 
 jest.mock('path');
-jest.mock('fs');
 jest.mock('../../../source/controllers/error');
 
 
+const sandbox = sinon.sandbox.create();
 const join = path.join;
-const readFile = fs.readFile;
-const writeFile = fs.writeFile;
 
 
 const DATA = {'id': 2, 'cardNumber': '4093560410000024', 'balance': 20};
@@ -36,6 +34,18 @@ const CARDS = [
 		"balance": 7850
 	}
 ];
+
+
+sandbox.stub(CardsModel.prototype, 'loadFile').callsFake(function loadFile() {
+	this._dataSource = CARDS;
+});
+
+
+sandbox.stub(CardsModel.prototype, '_saveUpdates').onFirstCall().callsFake(function _saveUpdates() {
+	return 'OK';
+}).onSecondCall().callsFake(function _saveUpdates() {
+	throw 'test error';
+});
 
 
 join.mockImplementation((a,b,c,d) => {
@@ -59,12 +69,6 @@ test('Test constructor', () => {
 
 
 test("Test create",  async() => {
-	readFile.mockImplementation((path,callback) => {
-		callback(null, JSON.stringify(CARDS));
-	});
-	writeFile.mockImplementation((path,data,callback) => {
-		callback(null, 'OK');
-	});
 	let data = {'id': 1, 'cardNumber': '4093560410000024', 'balance': 20};
 	data = await cardModel.create(data);
 	expect(data).toEqual(DATA);
@@ -73,20 +77,33 @@ test("Test create",  async() => {
 
 
 test("Test create error",  async() => {
-	readFile.mockImplementation((path,callback) => {
-		callback('test error');
-	});
 	let data = {'id': 1, 'cardNumber': '4093560410000024', 'balance': 20};
 	try {
 		data = await cardModel.create(data);
 	} catch (err) {
 		data = err;
 	}
-	expect(data).toEqual('Err created card: Err loadFile : test error');
+	sandbox.resetHistory();
+	expect(data).toEqual('Err created card: test error');
 });
-/*
+
+
 test("Test remove",  async() => {
-	const data = await cardModel.remove(2);
-	expect(data).toBe(false);
+	await cardModel.remove(2);
+	const focus = [ { 'id': 1, 'cardNumber': '4701270410000005', 'balance': 4334 },
+		{ 'id': 3, 'cardNumber': '5469250410000042', 'balance': 7850 } ];
+	expect(cardModel._dataSource).toEqual(focus);
 });
-*/
+
+
+test("Test remove error",  async() => {
+	let data;
+	try {
+		await cardModel.remove(2);
+	} catch (err) {
+		data = err;
+	}
+	sandbox.resetHistory();
+	expect(data).toEqual('Err deleted : Не существует карты с id 2');
+});
+
