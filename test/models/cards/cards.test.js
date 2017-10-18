@@ -1,75 +1,91 @@
 import * as jest from "jest";
 
 const path =require('path');
-//const fs = require('fs');
+const fs = require('fs');
 
-const FileModel = require('../../../source/models/fileModel');
 const CardsModel = require('../../../source/models/cards/cards');
 const Error = require('../../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////////////////
 
 jest.mock('path');
-//jest.mock('fs');
-//jest.mock('../../../source/models/fileModel');
-//jest.mock('../../../source/models/cards/cards');
+jest.mock('fs');
 jest.mock('../../../source/controllers/error');
 
 
 const join = path.join;
-//const readFile = fs.readFile;
-//const writeFile = fs.writeFile;
+const readFile = fs.readFile;
+const writeFile = fs.writeFile;
 
-//;
-const DATA = [{'id': 1, 'cardNumber': '0000000000000000', 'balance': 20}];
+
+const DATA = {'id': 2, 'cardNumber': '4093560410000024', 'balance': 20};
+const CARDS = [
+	{
+		"id": 1,
+		"cardNumber": "4701270410000005",
+		"balance": 4334
+	},
+	{
+		"id": 2,
+		"cardNumber": "4093560410000024",
+		"balance": 7434
+	},
+	{
+		"id": 3,
+		"cardNumber": "5469250410000042",
+		"balance": 7850
+	}
+];
 
 
 join.mockImplementation((a,b,c,d) => {
-	return 'test';
+	return d;
 });
 
-
-/*
-readFile.mockImplementation((path,callback) => {
-	callback(null, JSON.stringify(DATA));
-});
-
-writeFile.mockImplementation((path,data,callback) => {
-	callback(null, 'OK');
-});
 
 Error.mockImplementation((err) => {
-	return false;
+	return err;
 });
-*/
+
 
 //////////////////////////////////////////////////////////////////////////////////////
-//CardsModel.prototype.loadFile = jest.genMockFn();
-jest.mock('../../../source/models/fileModel');
-FileModel.prototype.constructor.mockImplementation((a) => {
-	console.log(10);
-	return new FileModel(a)});
-FileModel.prototype.loadFile.mockImplementation(() => console.log(10));
 
 let cardModel;
-/*
+
 test('Test constructor', () => {
 	cardModel = new CardsModel();
-	expect(cardModel._dataSourceFile).toBe('test');
+	expect(cardModel._dataSourceFile).toBe('cards.json');
 });
-*/
+
 
 test("Test create",  async() => {
-	cardModel = new CardsModel();
-	console.log(cardModel);
-	cardModel.loadFile();
-	let data = DATA;
-	//const data = await cardModel.create(DATA);
+	readFile.mockImplementation((path,callback) => {
+		callback(null, JSON.stringify(CARDS));
+	});
+	writeFile.mockImplementation((path,data,callback) => {
+		callback(null, 'OK');
+	});
+	let data = {'id': 1, 'cardNumber': '4093560410000024', 'balance': 20};
+	data = await cardModel.create(data);
 	expect(data).toEqual(DATA);
 });
 
+
+
+test("Test create error",  async() => {
+	readFile.mockImplementation((path,callback) => {
+		callback('test error');
+	});
+	let data = {'id': 1, 'cardNumber': '4093560410000024', 'balance': 20};
+	try {
+		data = await cardModel.create(data);
+	} catch (err) {
+		data = err;
+	}
+	expect(data).toEqual('Err created card: Err loadFile : test error');
+});
 /*
-test("Test delete",  async() => {
+test("Test remove",  async() => {
 	const data = await cardModel.remove(2);
 	expect(data).toBe(false);
 });

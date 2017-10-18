@@ -17,6 +17,7 @@ class Cards extends FileModel{
 			for (let i in this._dataSource)
 				if (this._dataSource[i].cardNumber === card.cardNumber) {
 					this._dataSource[i].balance = card.balance;
+					card.id = this._dataSource[i].id;
 					flag = true;
 					break;
 				}
@@ -28,7 +29,7 @@ class Cards extends FileModel{
 			return card;
 		}
 		catch (err) {
-			return ApplicationError(('Err created card: ' + err), 400);
+			throw ApplicationError(('Err created card: ' + err), 400);
 		}
 	}
 
