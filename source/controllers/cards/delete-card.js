@@ -5,10 +5,11 @@ const logger = require('../../../libs/logger')('delete-card');
 
 module.exports = async(ctx) => {
 	try {
-		const cardId = ctx.params['id'];
+		let cardId = ctx.params['id'];
 		logger.log('info',`Запрос на удаление карты ${cardId}`);
 		if (cardId.search(/^\d+$/) === -1) throw("Id должно быть числом");
-		const cardsModel = await new CardsModel();
+		cardId = Number(cardId);
+		const cardsModel = new CardsModel();
 		await cardsModel.remove(cardId);
 		logger.log('info','Карта удалена');
 		ctx.status = 200;

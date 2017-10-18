@@ -8,13 +8,13 @@ module.exports = async(ctx) => {
 	try {
 		const card = {
 			id: 0,
-			cardNumber: ctx.request.body.cardNumber,
-			balance: ctx.request.body.balance
+			cardNumber: String(ctx.request.body.cardNumber),
+			balance: String(ctx.request.body.balance)
 		};
 		logger.log('info','Получены данные карты');
 		await validationCard(card);
 		card.balance *= 1;
-		const cardsModel = await new CardsModel();
+		const cardsModel = new CardsModel();
 		const newCard = await cardsModel.create(card);
 		logger.log('info','Карта создана');
 		ctx.status = 201;

@@ -1,3 +1,5 @@
+'use strict';
+
 const jest = require('jest');
 const sinon = require('sinon');
 

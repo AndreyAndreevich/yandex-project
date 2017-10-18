@@ -67,11 +67,13 @@ router.post('/cards/:id/transfer',transfer);
 app.use(bodyParser);
 app.use(router.routes());
 app.use(serve('./public'));
-app.listen(port, () => {
-	logger.log('info',`Server RUN: ${port}`)
-});
+if (!module.parent) {
+	app.listen(port, () => {
+		logger.log('info', `Server RUN: ${port}`)
+	});
+}
 
-
+module.exports = app;
 
 /*
 // Создадим модель Cards и Transactions на уровне приложения и проинициализируем ее

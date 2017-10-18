@@ -7,6 +7,10 @@ module.exports = {
 		"document": true
 	},
 
+	"plugins": [
+		"jest"
+	],
+
 	"rules": {
 		"strict": 0,
 		"comma-dangle": 0,

@@ -6,14 +6,15 @@ const logger = require('../../../libs/logger')('get-transactions');
 
 module.exports = async(ctx) => {
 	try {
-		const id = ctx.params['id'];
+		let id = ctx.params['id'];
 		logger.log('info',`Запрос на получение списка транзакций карты ${id}`);
-		if (id.search(/^\d+$/) === -1) throw("Id должно быть числом");
+		if (id.search(/^\d+$/) === -1) throw("Id должен быть числом");
+		id = Number(id);
 		let transactionsMas = await new TransactionsModel().getAll();
 		let trueMas = [];
 		transactionsMas.forEach(async(item, i, arr) => {
 			await Promise.resolve();
-			if (item.cardId === ctx.params.id)
+			if (item.cardId === id)
 				trueMas.push(item);
 		});
 		ctx.body = trueMas;

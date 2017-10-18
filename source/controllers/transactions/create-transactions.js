@@ -9,16 +9,17 @@ module.exports = async(ctx) => {
 	try {
 		let transactions = {
 			id: 0,
-			cardId: ctx.params.id,
+			cardId: String(ctx.params.id),
 			type: ctx.request.body.type,
 			data: ctx.request.body.data,
 			time: ctx.request.body.time,
-			sum: ctx.request.body.sum
+			sum: String(ctx.request.body.sum)
 		};
 		logger.log('info','Получены данные транзакции');
 		await validationTransactions(transactions);
-		transactions.cardId *= 1;
-		const transactionsModel = await new TransactionsModel();
+		transactions.cardId = Number(transactions.cardId);
+		transactions.sum = Number(transactions.sum);
+		const transactionsModel = new TransactionsModel();
 		await transactionsModel.create(transactions);
 		logger.log('info','Транзакция добавлена');
 		ctx.status = 200;
