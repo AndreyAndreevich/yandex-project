@@ -156,7 +156,7 @@ test('Test create transaction controller (error created)', async () => {
 });
 
 
-test('Test create transaction controller (error id)', async () => {
+test('Test create transaction controller (error data.type)', async () => {
 	DATA.type = "error";
 	const response = await supertest(server)
 		.post('/cards/1/transactions')

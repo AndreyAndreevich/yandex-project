@@ -67,13 +67,14 @@ router.post('/cards/:id/transfer',transfer);
 app.use(bodyParser);
 app.use(router.routes());
 app.use(serve('./public'));
+
 if (!module.parent) {
 	app.listen(port, () => {
 		logger.log('info', `Server RUN: ${port}`)
 	});
 }
 
-module.exports = app;
+
 
 /*
 // Создадим модель Cards и Transactions на уровне приложения и проинициализируем ее
@@ -89,3 +90,19 @@ app.use(async (ctx, next) => {
 	await next();
 });
 */
+
+/*
+const fs = require('fs');
+const https = require('https');
+
+
+const options = {
+	key: fs.readFileSync('keys/key.pem' ),
+	cert: fs.readFileSync('keys/cert.pem')
+};
+https.createServer(options, app.callback()).listen(3001);
+*/
+
+module.exports = app;
+
+

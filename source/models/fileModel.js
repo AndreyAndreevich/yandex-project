@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const {promisify} = require('util');
 
+const mongoose = require('mongoose');
+
 const Model = require('./model');
 
 const writeFileAsync = promisify(fs.writeFile);
@@ -25,7 +27,9 @@ class fileModel extends Model{
 	}
 
 	async getAll () {
-		await this.loadFile();
+		if (!this._dataSource) {
+			await this.loadFile();
+		}
 		return this._dataSource;
 	}
 
