@@ -2,20 +2,25 @@
   "name": "yandex-project",
   "version": "1.0.0",
   "description": "Приложение школы Node.js «Кошелёк»",
-  "author": "",
+  "author": "AndreyAndreevich",
   "scripts": {
     "start": "node ./source/app.js",
-    "test": "jest",
-    "server": "nodemon  ./source/app.js",
+	"start:https": "NODE_HTTPS=1 npm start",
+	"server": "nodemon  ./source/app.js",
+	"server:https": "NODE_HTTPS=1 npm run server",
+	"test": "jest",
     "build": "./node_modules/.bin/webpack",
-    "precommit": "eslint ./source/app.js"
+    "precommit": "eslint ./source/app.js",
+	"tls:generate": "scripts/generate.sh"
   },
   "nodemonConfig": {
     "ignore": [
       "./source/data/",
       "./source/client/components/",
       "./logs/",
-      "./test/"
+      "./test/",
+	  "./keys/",
+	  "./scripts/"
     ]
   },
   "jest": {

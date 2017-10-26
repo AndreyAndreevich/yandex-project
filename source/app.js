@@ -3,6 +3,9 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser')();
 const router = require('koa-router')();
 const serve = require('koa-static');
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 
 const app = new Koa();
 
@@ -68,13 +71,38 @@ app.use(bodyParser);
 app.use(router.routes());
 app.use(serve('./public'));
 
+/*
 if (!module.parent) {
 	app.listen(port, () => {
 		logger.log('info', `Server RUN: ${port}`)
 	});
 }
+*/
 
+const listenCallback = function() {
+	const {
+		port
+	} = this.address();
 
+	logger.info(`Server RUN: ${port}`);
+};
+
+if (!module.parent && process.env.NODE_HTTPS) {
+	const protocolSecrets = {
+		key: fs.readFileSync('keys/key.pem'),
+		cert: fs.readFileSync('keys/cert.pem')
+	};
+
+	https
+		.createServer(protocolSecrets, app.callback())
+		.listen(port, listenCallback);
+}
+
+if (!module.parent && !process.env.NODE_HTTPS) {
+	http
+		.createServer(app.callback())
+		.listen(port, listenCallback);
+}
 
 /*
 // Создадим модель Cards и Transactions на уровне приложения и проинициализируем ее
