@@ -1,7 +1,7 @@
 'use strict';
 
-const CardsModel = require('../models/file/cards');
-const TransactionsModel = require('../models/file/transactions');
+const CardsModel = require('../models/cards');
+const TransactionsModel = require('../models/transactions');
 const logger = require('../../libs/logger')('pay');
 
 const moment = require('moment');
@@ -15,34 +15,26 @@ module.exports = async(ctx) => {
 		logger.log('info',`Запрос на оплату по карте ${cardId}`);
 		if (!sum | !type | !data | !cardId) throw ('Данные не заполнены');
 		if (sum <= 0) throw ('Сумма оплаты долна быть положительной');
-		let flag = true;
 		const cardsModel =  new CardsModel();
-		let cards = await cardsModel.getAll();
-		let card;
-		for (let i = 0; i < cards.length; i++) {
-			if (cards[i].id === cardId) {
-				card = cards[i];
-				card.balance = card.balance - sum;
-				flag = false;
-			}
-		}
-		if (flag) throw (`Нет карты с id ${cardId}`);
+		let card = await cardsModel.get(cardId);
+		if (!card) throw (`Нет карты с id ${cardId}`);
+		card.balance = card.balance - sum;
 		if (card.balance < 0) throw ('Недостаточно средств на карте');
 		let transaction = {
-			id: 0,
 			cardId: cardId,
 			type: type,
 			data: data,
 			time: moment().format('YYYY-MM-DTHH:mm:ssZ'),
 			sum: sum
 		};
+
 		const newCard = await cardsModel.create(card);
-		const transactionsModel = new TransactionsModel();
-		await transactionsModel.create(transaction);
+		const newTransaction = await new TransactionsModel().create(transaction);
 		const req = {
 			card: newCard,
-			transaction: transaction
+			transaction: newTransaction
 		};
+
 		logger.log('info','Оплата произведена');
 		ctx.status = 201;
 		ctx.body = req;

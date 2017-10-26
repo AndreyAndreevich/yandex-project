@@ -1,7 +1,7 @@
 'use strict';
 
-const CardsModel = require('../models/file/cards');
-const TransactionsModel = require('../models/file/transactions');
+const CardsModel = require('../models/cards');
+const TransactionsModel = require('../models/transactions');
 const logger = require('../../libs/logger')('transfer');
 
 const moment = require('moment');
@@ -11,33 +11,18 @@ module.exports = async(ctx) => {
 		let data = ctx.request.body;
 		const cardId1 = Number(ctx.params['id']);
 		const cardId2 = Number(data.data);
-		logger.log('info',`Запрос на перевод с карты ${cardId1} на карту ${data.data}`);
+		logger.log('info', `Запрос на перевод с карты ${cardId1} на карту ${data.data}`);
 		if (!data | !Number(data.sum) | !cardId1 | !cardId2 | !(data.type === "card2Card")) throw ('Данные не заполнены');
-		if (data.sum <= 0) throw ('Сумма перевода долна быть положительной');
+		if (data.sum <= 0) throw ('Сумма перевода должна быть положительной');
 		const cardsModel = await new CardsModel();
-		const cards = await cardsModel.getAll();
-		let card1, card2;
-		let flag = true;
-		for (let i = 0; i < cards.length; i++) {
-			if (cards[i].id === cardId2) {
-				card2 = cards[i];
-				if (data.sum > card2.balance) throw (`Недостаточно средств на карте ${cardId2}`)
-				flag = false;
-			}
-		}
-		if (flag) throw (`Нет карты с id ${cardId2}`);
-		flag = true;
-		for (let i = 0; i < cards.length; i++) {
-			if (cards[i].id === cardId1) {
-				card1 = cards[i];
-				card2.balance = card2.balance - data.sum;
-				card1.balance = card1.balance + data.sum;
-				flag = false;
-			}
-		}
-		if (flag) throw (`Нет карты с id ${cardId1}`);
+		let card2 = await cardsModel.get(cardId2);
+		if (!card2) throw (`Нет карты с id ${cardId2}`);
+		if (data.sum > card2.balance) throw (`Недостаточно средств на карте ${cardId2}`);
+		let card1 = await cardsModel.get(cardId1);
+		if (!card1) throw (`Нет карты с id ${cardId1}`);
+		card2.balance = card2.balance - data.sum;
+		card1.balance = card1.balance + data.sum;
 		let transaction1 = {
-			id: 0,
 			cardId: cardId1,
 			type: "prepaidCard",
 			data: card2.cardNumber,
@@ -45,7 +30,6 @@ module.exports = async(ctx) => {
 			sum: String(data.sum)
 		};
 		let transaction2 = {
-			id: 0,
 			cardId: cardId2,
 			type: data.type,
 			data: card1.cardNumber,
@@ -54,14 +38,14 @@ module.exports = async(ctx) => {
 		};
 		const transactionsModel = new TransactionsModel();
 		let newCard1 = await cardsModel.create(card1);
-		await transactionsModel.create(transaction2);
+		let newTransaction2 = await transactionsModel.create(transaction2);
 		let newCard2 = await cardsModel.create(card2);
-		await transactionsModel.create(transaction1);
+		let newTransaction1 = await transactionsModel.create(transaction1);
 		let req = {
 			balance1: newCard1.balance,
 			balance2: newCard2.balance,
-			transaction1: transaction1,
-			transaction2: transaction2
+			transaction1: newTransaction1,
+			transaction2: newTransaction2
 		};
 		logger.log('info','Перевод произведен');
 		ctx.status = 201;

@@ -38,7 +38,7 @@ class Transactions extends DbModel {
 	 * Удаление транзакции
 	 */
 	static async remove() {
-		throw new ApplicationError('Transaction can\'t be removed', 400);
+		throw ApplicationError('Transaction can\'t be removed', 400);
 	}
 }
 

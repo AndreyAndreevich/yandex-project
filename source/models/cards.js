@@ -22,6 +22,7 @@ class Cards extends DbModel {
 
 		const cardNumber = card.cardNumber;
 		const oldCard = await this.getBy({cardNumber});
+
 		if (oldCard[0]) {
 			const id = oldCard[0].id;
 			oldCard[0].balance = card.balance;
@@ -54,29 +55,6 @@ class Cards extends DbModel {
 		await this._remove(id);
 	}
 
-	/**
-	 * Списание средств с карты
-	 * @param {Number} id идентификатор карты
-	 * @param {Number} sum сумма
-	 */
-	async withdraw(id, sum) {
-		const card = await this.get(id);
-		const newBalance = Number(card.balance) - Number(sum);
-
-		await this._update({id}, {balance: newBalance});
-	}
-
-	/**
-	 * Пополнение карты
-	 * @param {Number} id идентификатор карты
-	 * @param {Number} sum сумма
-	 */
-	async refill(id, sum) {
-		const card = await this.get(id);
-		const newBalance = Number(card.balance) + Number(sum);
-
-		await this._update({id}, {balance: newBalance});
-	}
 }
 
 module.exports = Cards;

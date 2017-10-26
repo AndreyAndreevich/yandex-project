@@ -5,7 +5,7 @@ const Card = mongoose.model('Card', {
 		required: true
 	},
 	cardNumber: {
-		type: String,
+		type: Number,
 		validate: {
 			validator(value) {
 				return luna(value);
