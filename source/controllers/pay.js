@@ -1,7 +1,7 @@
 'use strict';
 
-const CardsModel = require('../models/cards/cards');
-const TransactionsModel = require('../models/transactions/transactions');
+const CardsModel = require('../models/file/cards');
+const TransactionsModel = require('../models/file/transactions');
 const logger = require('../../libs/logger')('pay');
 
 const moment = require('moment');

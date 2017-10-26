@@ -1,6 +1,6 @@
 'use strict';
 
-const CardsModel = require('../../models/cards/cards');
+const CardsModel = require('../../models/cards');
 const logger = require('../../../libs/logger')('delete-card');
 
 module.exports = async(ctx) => {

@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 const path = require('path');
 
-const CardsModel = require('../../../source/models/cards/cards');
+const CardsModel = require('../../../source/models/file/cards');
 const Error = require('../../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ let cardModel;
 
 test('Test constructor', () => {
 	cardModel = new CardsModel();
-	expect(cardModel._dataSourceFile).toBe('cards.json');
+	expect(cardModel._dataSourceFile).toBe('file.json');
 });
 
 

@@ -1,4 +1,3 @@
-const utils = require('../../../libs/utils');
 const mongoose = require('mongoose');
 const Card = mongoose.model('Card', {
 	id: {
@@ -9,7 +8,7 @@ const Card = mongoose.model('Card', {
 		type: String,
 		validate: {
 			validator(value) {
-				return utils.validateCardNumber(value);
+				return luna(value);
 			},
 			message: '{VALUE} is not a valid card number!'
 		},
@@ -22,3 +21,15 @@ const Card = mongoose.model('Card', {
 });
 
 module.exports = Card;
+
+
+const luna = (number) => {
+	let sum = 0;
+	for (let i = 0; i < number.length; i++) {
+		let p = (i % 2) ? number[i]*2 : number[i];
+		p = (p>9) ? p - 9 : p;
+		sum += Number(p);
+	}
+	let flag = (sum % 10);
+	if (flag) throw(`Ошибка валидации Luna: ${flag}`);
+};

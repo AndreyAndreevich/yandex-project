@@ -6,7 +6,7 @@ const FileModel = require('../fileModel');
 
 class Cards extends FileModel{
 	constructor () {
-		super('cards.json');
+		super('file.json');
 	}
 
 	//Добавляет карту

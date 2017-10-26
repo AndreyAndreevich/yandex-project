@@ -7,6 +7,10 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/yandexdb', { useMongoClient: true });
+mongoose.Promise = global.Promise;
+
 const app = new Koa();
 
 const getCardsController = require('./controllers/cards/get-cards');
@@ -21,8 +25,8 @@ const {renderToString} = require('react-dom/server');
 const logger = require('../libs/logger')('app');
 
 //////////////////////////////
-const CardsModel = require('./models/cards/cards');
-const TransactionsModel = require('./models/transactions/transactions');
+const CardsModel = require('./models/cards');
+const TransactionsModel = require('./models/transactions');
 const cardsModel = new CardsModel();
 const transactionsModel = new TransactionsModel();
 
@@ -117,18 +121,6 @@ app.use(async (ctx, next) => {
 
 	await next();
 });
-*/
-
-/*
-const fs = require('fs');
-const https = require('https');
-
-
-const options = {
-	key: fs.readFileSync('keys/key.pem' ),
-	cert: fs.readFileSync('keys/cert.pem')
-};
-https.createServer(options, app.callback()).listen(3001);
 */
 
 module.exports = app;

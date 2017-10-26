@@ -6,8 +6,8 @@ const supertest = require('supertest');
 const app = require('../../source/app.js');
 const moment = require('moment');
 
-const CardsModel = require('../../source/models/cards/cards');
-const TransactionsModel = require('../../source/models/transactions/transactions');
+const CardsModel = require('../../source/models/file/cards');
+const TransactionsModel = require('../../source/models/file/transactions');
 const Error = require('../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@ const server = app.listen();
 
 test('Test transfer', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/transfer')
+		.post('/file/2/transfer')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(201);
@@ -136,7 +136,7 @@ test('Test transfer', async () => {
 
 test('Test transfer (error id)', async () => {
 	const response = await supertest(server)
-		.post('/cards/6/transfer')
+		.post('/file/6/transfer')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
@@ -146,7 +146,7 @@ test('Test transfer (error id)', async () => {
 
 test('Test transfer (error data)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/transfer')
+		.post('/file/2/transfer')
 		.set('Accept', 'application/json')
 		.send({
 			"data": 1,
@@ -160,7 +160,7 @@ test('Test transfer (error data)', async () => {
 
 test('Test transfer (error sum)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/transfer')
+		.post('/file/2/transfer')
 		.set('Accept', 'application/json')
 		.send({
 			"data": 1,
@@ -174,7 +174,7 @@ test('Test transfer (error sum)', async () => {
 
 test('Test transfer (error balance)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/transfer')
+		.post('/file/2/transfer')
 		.set('Accept', 'application/json')
 		.send({
 			"data": 1,
@@ -188,7 +188,7 @@ test('Test transfer (error balance)', async () => {
 
 test('Test transfer (error created)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/transfer')
+		.post('/file/2/transfer')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);

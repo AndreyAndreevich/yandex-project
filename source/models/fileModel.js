@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const {promisify} = require('util');
 
-const mongoose = require('mongoose');
-
 const Model = require('./model');
 
 const writeFileAsync = promisify(fs.writeFile);

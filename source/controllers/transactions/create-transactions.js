@@ -1,7 +1,7 @@
 'use strict';
 
-const TransactionsModel = require('../../models/transactions/transactions');
-const CardsModel = require('../../models/cards/cards');
+const TransactionsModel = require('../../models/transactions');
+const CardsModel = require('../../models/cards');
 const logger = require('../../../libs/logger')('create-transactions');
 
 
@@ -34,8 +34,9 @@ const validationTransactions = (transactions) => new Promise(async(resolve, reje
 	try {
 		let id = transactions.cardId;
 		if (id.search(/^\d+$/) === -1) throw('cardId должен быть числом');
-		let masCard = await new CardsModel().getAll();
-		if ((id > masCard.length) | (id <= 0)) throw(`Не существует карты с id: ${id}`);
+		let card = await new CardsModel().get(id);
+		console.log(card);
+		if (!card) throw(`Не существует карты с id: ${id}`);
 		let type = ["paymentMobile", "prepaidCard", "card2Card"];
 		if (type.indexOf(transactions.type) === -1)
 			throw(`Недопустимое поле type: ${transactions.type}`);

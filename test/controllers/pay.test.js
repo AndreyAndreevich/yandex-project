@@ -6,8 +6,8 @@ const supertest = require('supertest');
 const app = require('../../source/app.js');
 const moment = require('moment');
 
-const CardsModel = require('../../source/models/cards/cards');
-const TransactionsModel = require('../../source/models/transactions/transactions');
+const CardsModel = require('../../source/models/file/cards');
+const TransactionsModel = require('../../source/models/file/transactions');
 const Error = require('../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ const server = app.listen();
 
 test('Test pay', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/pay')
+		.post('/file/2/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(201);
@@ -131,7 +131,7 @@ test('Test pay', async () => {
 
 test('Test pay (error id)', async () => {
 	const response = await supertest(server)
-		.post('/cards/4/pay')
+		.post('/file/4/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
@@ -141,7 +141,7 @@ test('Test pay (error id)', async () => {
 
 test('Test pay (error data)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/pay')
+		.post('/file/2/pay')
 		.set('Accept', 'application/json')
 		.send({
 		"type": "paymentMobile",
@@ -154,7 +154,7 @@ test('Test pay (error data)', async () => {
 
 test('Test pay (error sum)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/pay')
+		.post('/file/2/pay')
 		.set('Accept', 'application/json')
 		.send({
 			"type": "paymentMobile",
@@ -168,7 +168,7 @@ test('Test pay (error sum)', async () => {
 
 test('Test pay (error balance)', async () => {
 	const response = await supertest(server)
-		.post('/cards/2/pay')
+		.post('/file/2/pay')
 		.set('Accept', 'application/json')
 		.send({
 			"type": "paymentMobile",
@@ -182,7 +182,7 @@ test('Test pay (error balance)', async () => {
 
 test('Test pay (error created)', async () => {
 	const response = await supertest(server)
-		.post('/cards/3/pay')
+		.post('/file/3/pay')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);

@@ -5,7 +5,7 @@ const sinon = require('sinon');
 const supertest = require('supertest');
 const app = require('../../../source/app.js');
 
-const CardsModel = require('../../../source/models/cards/cards');
+const CardsModel = require('../../../source/models/file/cards');
 const Error = require('../../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////
@@ -59,7 +59,7 @@ const server = app.listen();
 
 test('Test get card controller', async () => {
 	const response = await supertest(server)
-		.get('/cards/');
+		.get('/file/');
 	expect(response.statusCode).toBe(200);
 	expect(response.body).toEqual(CARDS);
 });
@@ -68,7 +68,7 @@ test('Test get card controller', async () => {
 
 test('Test create card controller', async () => {
 	const response = await supertest(server)
-		.post('/cards/')
+		.post('/file/')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(201);
@@ -78,7 +78,7 @@ test('Test create card controller', async () => {
 
 test('Test create card controller (error created)', async () => {
 	const response = await supertest(server)
-		.post('/cards/')
+		.post('/file/')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
@@ -89,7 +89,7 @@ test('Test create card controller (error created)', async () => {
 
 test('Test create card controller (error number of digits)', async () => {
 	const response = await supertest(server)
-		.post('/cards/')
+		.post('/file/')
 		.set('Accept', 'application/json')
 		.send({cardNumber: '11234567812345678', balance: '1000'});
 	expect(response.statusCode).toBe(400);
@@ -99,7 +99,7 @@ test('Test create card controller (error number of digits)', async () => {
 
 test('Test create card controller (error validation Luna)', async () => {
 	const response = await supertest(server)
-		.post('/cards/')
+		.post('/file/')
 		.set('Accept', 'application/json')
 		.send({cardNumber: '1234567812345678', balance: '1000'});
 	expect(response.statusCode).toBe(400);
@@ -111,14 +111,14 @@ test('Test create card controller (error validation Luna)', async () => {
 
 test('Test delete card controller', async () => {
 	const response = await supertest(server)
-		.delete('/cards/2');
+		.delete('/file/2');
 	expect(response.statusCode).toBe(200);
 });
 
 
 test('Test delete card controller (error no card)', async () => {
 	const response = await supertest(server)
-		.delete('/cards/5');
+		.delete('/file/5');
 	expect(response.statusCode).toBe(404);
 	expect(response.text).toBe('404 Card not found');
 });
@@ -126,7 +126,7 @@ test('Test delete card controller (error no card)', async () => {
 
 test('Test delete card controller (error no number id)', async () => {
 	const response = await supertest(server)
-		.delete('/cards/er');
+		.delete('/file/er');
 	expect(response.statusCode).toBe(404);
 	expect(response.text).toBe('404 Card not found');
 });
@@ -134,7 +134,7 @@ test('Test delete card controller (error no number id)', async () => {
 
 test('Test delete card controller (error remove)', async () => {
 	const response = await supertest(server)
-		.delete('/cards/1');
+		.delete('/file/1');
 	expect(response.statusCode).toBe(404);
 	expect(response.text).toBe('404 Card not found');
 });

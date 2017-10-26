@@ -17,7 +17,7 @@ import {
 
 import './fonts.css';
 
-//import cardsData from '../../data/cards';
+//import cardsData from '../../data/file';
 //import transactionsData from '../../data/transactions';
 
 injectGlobal`

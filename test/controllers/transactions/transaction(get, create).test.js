@@ -5,8 +5,8 @@ const sinon = require('sinon');
 const supertest = require('supertest');
 const app = require('../../../source/app.js');
 
-const CardsModel = require('../../../source/models/cards/cards');
-const TransactionsModel = require('../../../source/models/transactions/transactions');
+const CardsModel = require('../../../source/models/file/cards');
+const TransactionsModel = require('../../../source/models/file/transactions');
 const Error = require('../../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////
@@ -105,7 +105,7 @@ const server = app.listen();
 
 test('Test get transaction controller', async () => {
 	const response = await supertest(server)
-		.get('/cards/1/transactions');
+		.get('/file/1/transactions');
 	expect(response.statusCode).toBe(200);
 	expect(response.body).toEqual([{
 		"id": 1,
@@ -120,7 +120,7 @@ test('Test get transaction controller', async () => {
 
 test('Test get transaction controller (error id)', async () => {
 	const response = await supertest(server)
-		.get('/cards/ee/transactions');
+		.get('/file/ee/transactions');
 	expect(response.statusCode).toBe(400);
 	expect(response.text).toBe('400 Bad request');
 });
@@ -129,7 +129,7 @@ test('Test get transaction controller (error id)', async () => {
 
 test('Test create transaction controller', async () => {
 	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/file/1/transactions')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(200);
@@ -138,7 +138,7 @@ test('Test create transaction controller', async () => {
 
 test('Test create transaction controller (error id)', async () => {
 	const response = await supertest(server)
-		.post('/cards/4/transactions')
+		.post('/file/4/transactions')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
@@ -148,7 +148,7 @@ test('Test create transaction controller (error id)', async () => {
 
 test('Test create transaction controller (error created)', async () => {
 	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/file/1/transactions')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);
@@ -159,7 +159,7 @@ test('Test create transaction controller (error created)', async () => {
 test('Test create transaction controller (error data.type)', async () => {
 	DATA.type = "error";
 	const response = await supertest(server)
-		.post('/cards/1/transactions')
+		.post('/file/1/transactions')
 		.set('Accept', 'application/json')
 		.send(DATA);
 	expect(response.statusCode).toBe(400);

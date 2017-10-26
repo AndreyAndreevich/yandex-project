@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 const path = require('path');
 
-const TransactionsModel = require('../../../source/models/transactions/transactions');
+const TransactionsModel = require('../../../source/models/file/transactions');
 const Error = require('../../../source/controllers/error');
 
 /////////////////////////////////////////////////////////////////////////////////////
